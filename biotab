@@ -3,6 +3,7 @@
 import argparse
 
 from BioTab.xlsx2tab import xlsx2tab
+from BioTab.tab2xlsx import tab2xlsx
 
 SUB_XLSX2TAB = "xslx2tab"
 
