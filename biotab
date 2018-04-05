@@ -3,19 +3,19 @@
 import argparse
 
 from BioTab.xlsx2tab import xlsx2tab
-from BioTab.tab2xlsx import tab2xlsx
+#from BioTab.tab2xlsx import tab2xlsx
 
 SUB_XLSX2TAB = "xslx2tab"
 
-class bistep:
+class biotab:
     def __init__(self):
         pass
-    def xlsx2tab(self, options):
+
+    def exe_xlsx2tab(self, options):
         x2t = xlsx2tab()
         x2t.output_tab(options)
 
 if __name__ == '__main__':
-    biotab = xlsx2tab()
     ## description - Text to display before the argument help (default: none)
     parser=argparse.ArgumentParser(description='biotab: the Swiss army knife of tabular data in bioinformatics') 
     subparsers = parser.add_subparsers(help='sub-command help', dest = 'command')
@@ -36,4 +36,4 @@ if __name__ == '__main__':
     print "Sub command is: " + dict_cmd['command']
     bt = biotab()
     if dict_cmd['command'] == SUB_XLSX2TAB:
-        bt.xlsx2tab(options)
+        bt.exe_xlsx2tab(options)
