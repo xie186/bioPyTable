@@ -4,5 +4,9 @@
 
 xlsx2tab
 tab2xlsx
+join
+venn
+upset
+upsetbed
 
 
