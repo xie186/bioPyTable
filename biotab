@@ -6,12 +6,16 @@ from BioTab.xlsx2tab import xlsx2tab
 #from BioTab.tab2xlsx import tab2xlsx
 
 SUB_XLSX2TAB = "xslx2tab"
+SUB_TAB2XLSX = "tab2xlsx"
 
 class biotab:
     def __init__(self):
         pass
 
     def exe_xlsx2tab(self, options):
+        x2t = xlsx2tab()
+        x2t.output_tab(options)
+    def exe_tab2xlsx(self, options):
         x2t = xlsx2tab()
         x2t.output_tab(options)
 
@@ -28,7 +32,7 @@ if __name__ == '__main__':
   
  
     ### ###
-    parser_tab2xlsx = subparsers.add_parser('tab2xlsx', help='Convert tab-delemited file to XLSX file.')
+    parser_tab2xlsx = subparsers.add_parser(SUB_TAB2XLSX, help='Convert tab-delemited file to XLSX file.')
     parser_tab2xlsx.add_argument('-i', '--input', metavar='input', help='Tab-delemited files. [tab1.txt, tab2.txt]', required=True)
     parser_tab2xlsx.add_argument('-l', '--label', metavar='label', help='Label for the sheets. By default: if this parameter is not given, the file names of tab-delemited files will be used here.')
     options = parser.parse_args()
@@ -37,3 +41,5 @@ if __name__ == '__main__':
     bt = biotab()
     if dict_cmd['command'] == SUB_XLSX2TAB:
         bt.exe_xlsx2tab(options)
+    if dict_cmd['command'] == SUB_TAB2XLSX:
+        bt.exe_tab2xlsx(options)
