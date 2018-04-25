@@ -3,7 +3,7 @@
 import argparse
 
 from BioTab.xlsx2tab import xlsx2tab
-#from BioTab.tab2xlsx import tab2xlsx
+from BioTab.tab2xlsx import tab2xlsx
 
 SUB_XLSX2TAB = "xslx2tab"
 SUB_TAB2XLSX = "tab2xlsx"
@@ -16,8 +16,8 @@ class biotab:
         x2t = xlsx2tab()
         x2t.output_tab(options)
     def exe_tab2xlsx(self, options):
-        x2t = xlsx2tab()
-        x2t.output_tab(options)
+        t2x = tab2xlsx()
+        t2x.output_tab(options)
 
 if __name__ == '__main__':
     ## description - Text to display before the argument help (default: none)
