@@ -11,7 +11,8 @@ class xlsx2tab:
         wb = load_workbook(options.input) 
         if not options.prefix:
             options.prefix = basename(options.input)
-        sheetnames = wb.get_sheet_names()
+        #sheetnames = wb.get_sheet_names() ## deprecated
+        sheetnames = wb.sheetnames
         for sheetname in sheetnames:
             sn_slug = slugify(sheetname)            
             output_file = '{}.{}.{}'.format(options.prefix, sn_slug, "txt")
