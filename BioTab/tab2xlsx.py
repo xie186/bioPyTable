@@ -3,22 +3,29 @@ from openpyxl import Workbook
 from slugify import slugify
 from os.path import basename
 
-class xlsx2tab:
+class tab2xlsx:
     def __init__ (self):
         pass
 
-    def output_tab(self, options):
-        wb = load_workbook(options.input) 
-        if not options.prefix:
-            options.prefix = basename(options.input)
-        sheetnames = wb.get_sheet_names()
-        for sheetname in sheetnames:
-            sn_slug = slugify(sheetname)            
-            output_file = '{}.{}.{}'.format(options.prefix, sn_slug, "txt")
-            with open(output_file, "w") as output_handle:
-                sheet = wb[sheetname]
-                for row in sheet.iter_rows():
-                    ele = []
-                    for cell in row:
-                        ele.append(str(cell.value))
-                    output_handle.write("\t".join(ele) + "\n")
+    def output_xlsx(self, options):
+        wb = Workbook()
+        tab_list = options.tab.split(",")
+        sheet_list = tab_list
+        if options.sheet:
+            sheet_list = options.sheet.split(",")
+        if len(tab_list) != len(sheet_list):
+            raise Exception("Sheets number is not equal to table number! Please check!")
+        for i in range(0, len(sheet_list)):
+            ws = wb.create_sheet(sheet_list[i], i)
+            ws.freeze_panes = options.freeze_panes
+            with open(tab_list[i]) as tab:
+                row_index = 1
+                for line in tab:
+                    line = line.rstrip()
+                    ele = line.split("\t")
+                    for j in range(0, len(ele)):
+                        #print(row_index)
+                        ws.cell(row=row_index, column=j+1).value = ele[j]
+                    row_index += 1
+        wb.save(options.output)
+                    
