@@ -22,7 +22,7 @@ class biotab:
         t2x.output_xlsx(options)
     def exe_filter(self, options):
         tf = tabfilter()
-        tf.output_tabfilter(options)
+        tf.output_filter(options)
 
 if __name__ == '__main__':
     ## description - Text to display before the argument help (default: none)
@@ -49,6 +49,7 @@ if __name__ == '__main__':
     parser_filter.add_argument('-f', '--tabfil', help='Table-delemited file including the column(s) for filtering')
     parser_filter.add_argument('--target_column', type=int, help='Columns to filter', default = 1)
     parser_filter.add_argument('--column', type=int, help='Column(s) with the IDs to filter', default = 1)
+    parser_filter.add_argument('-o', '--output', help='output file', default = "Output_file.tab")
     options = parser.parse_args()
     dict_cmd = vars(options)
     print("Subcommand is: " + dict_cmd['command'])
