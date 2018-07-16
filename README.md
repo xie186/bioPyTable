@@ -6,6 +6,7 @@
 
 * xlsx2tab
 * tab2xlsx
+* filter
 * join
 * venn
 * upset
