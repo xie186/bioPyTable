@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from openpyxl import load_workbook
 from openpyxl import Workbook
 from slugify import slugify

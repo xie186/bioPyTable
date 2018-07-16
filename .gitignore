@@ -3,3 +3,5 @@ virtual_biotab/
 test.sh
 .dir_bash_history_xie186
 test*
+
+.virenv/

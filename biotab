@@ -4,9 +4,11 @@ import argparse
 
 from BioTab.xlsx2tab import xlsx2tab
 from BioTab.tab2xlsx import tab2xlsx
+from BioTab.tabfilter import tabfilter
 
 SUB_XLSX2TAB = "xslx2tab"
 SUB_TAB2XLSX = "tab2xlsx"
+SUB_FILTER = "filter"
 
 class biotab:
     def __init__(self):
@@ -18,6 +20,9 @@ class biotab:
     def exe_tab2xlsx(self, options):
         t2x = tab2xlsx()
         t2x.output_xlsx(options)
+    def exe_filter(self, options):
+        tf = tabfilter()
+        tf.output_tabfilter(options)
 
 if __name__ == '__main__':
     ## description - Text to display before the argument help (default: none)
@@ -37,6 +42,13 @@ if __name__ == '__main__':
     parser_tab2xlsx.add_argument('-s', '--sheet', metavar='sheet', help='Names for the sheets. By default: if this parameter is not given, the file names of tab-delemited files will be used here.')
     parser_tab2xlsx.add_argument('-f', '--freeze_panes', metavar='freeze_panes', help='Freeze_panes attribute that can be set to a Cell object or a string of a cell’s coordinates. Note that all rows above and all columns to the left of this cell will be frozen, but the row and column of the cell itself will not be frozen. [Default: None]', default=None)
     parser_tab2xlsx.add_argument('-o', '--output', metavar='output', help='Name for output file. [Default: output.xlsx]', default = "output.xlsx")
+
+    ### Filter
+    parser_filter = subparsers.add_parser(SUB_FILTER, help='Filter a table based on a list of IDs or regions.')
+    parser_filter.add_argument('-t', '--tab', help='Tab-delemited files.', required=True)
+    parser_filter.add_argument('-f', '--tabfil', help='Table-delemited file including the column(s) for filtering')
+    parser_filter.add_argument('--target_column', type=int, help='Columns to filter', default = 1)
+    parser_filter.add_argument('--column', type=int, help='Column(s) with the IDs to filter', default = 1)
     options = parser.parse_args()
     dict_cmd = vars(options)
     print("Subcommand is: " + dict_cmd['command'])
@@ -45,5 +57,7 @@ if __name__ == '__main__':
         bt.exe_xlsx2tab(options)
     if dict_cmd['command'] == SUB_TAB2XLSX:
         bt.exe_tab2xlsx(options)
+    if dict_cmd['command'] == SUB_FILTER:
+        bt.exe_filter(options)
     print("...")
     print("Done")
