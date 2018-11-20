@@ -44,3 +44,11 @@ Intervene: a tool for intersection and visualization of multiple gene or genomic
 Join, Merge
 
 https://www.shanelynn.ie/merge-join-dataframes-python-pandas-index-1/
+
+
+# ENV
+
+```
+module load anaconda/5.1.0-py27
+
+```
