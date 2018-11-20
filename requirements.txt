@@ -1,8 +1,4 @@
-et-xmlfile==1.0.1
-jdcal==1.3
-openpyxl==2.5.9
-pysqlite==2.8.2
-rpy2==2.8.2
-singledispatch==3.4.0.3
-six==1.11.0
-slugify==0.0.1
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+
