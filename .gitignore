@@ -5,6 +5,6 @@ virtual_biotab/
 *.pyc
 test.sh
 .dir_bash_history_xie186
-test*
+#test*
 
 .virenv/
