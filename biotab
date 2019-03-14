@@ -1,14 +1,31 @@
 #!/usr/bin/env python
 #-*-- coding: utf-8 -*-
 import argparse
+import csv
 
 from BioTab.xlsx2tab import xlsx2tab
 from BioTab.tab2xlsx import tab2xlsx
 from BioTab.tabfilter import tabfilter
 
 SUB_XLSX2TAB = "xslx2tab"
+SUB_CSV2TAB = "csv2tab"
 SUB_TAB2XLSX = "tab2xlsx"
 SUB_FILTER = "filter"
+
+class csv2tab:
+    def __init__ (self):
+        pass
+
+    def output_tab(self, options):
+        # https://stackoverflow.com/a/27553098/3357935
+        print("Converting CSV to tab-delimited file...")
+        with open(options.csv) as inputFile:
+             with open(options.output, 'w', newline='') as outputFile:
+                 reader = csv.DictReader(inputFile, delimiter=',')
+                 writer = csv.DictWriter(outputFile, reader.fieldnames, delimiter='\t')
+                 writer.writeheader()
+                 writer.writerows(reader)
+        print("Conversion complete.")
 
 class biotab:
     def __init__(self):
@@ -23,6 +40,10 @@ class biotab:
     def exe_filter(self, options):
         tf = tabfilter()
         tf.output_filter(options)
+    def exe_csv2tab(self, options):
+        c2t = csv2tab()
+        c2t.output_tab(options)
+
 
 if __name__ == '__main__':
     ## description - Text to display before the argument help (default: none)
@@ -43,6 +64,11 @@ if __name__ == '__main__':
     parser_tab2xlsx.add_argument('-f', '--freeze_panes', metavar='freeze_panes', help='Freeze_panes attribute that can be set to a Cell object or a string of a cell’s coordinates. Note that all rows above and all columns to the left of this cell will be frozen, but the row and column of the cell itself will not be frozen. [Default: None]', default=None)
     parser_tab2xlsx.add_argument('-o', '--output', metavar='output', help='Name for output file. [Default: output.xlsx]', default = "output.xlsx")
 
+    ### csv2tab
+    parser_csv2tab = subparsers.add_parser(SUB_CSV2TAB, help='Convert tab-delemited file to XLSX file.')
+    parser_csv2tab.add_argument('-c', '--csv', metavar='csv', help='csv files', required=True)
+    parser_csv2tab.add_argument('-o', '--output', metavar='output', help='Name for output file. [Default: output.tab]', default = "output.tab")
+
     ### Filter
     parser_filter = subparsers.add_parser(SUB_FILTER, help='Filter a table based on a list of IDs or regions.')
     parser_filter.add_argument('-t', '--tab', help='Tab-delemited files.', required=True)
@@ -61,5 +87,7 @@ if __name__ == '__main__':
         bt.exe_tab2xlsx(options)
     if dict_cmd['command'] == SUB_FILTER:
         bt.exe_filter(options)
+    if dict_cmd['command'] == SUB_CSV2TAB:
+        bt.exe_csv2tab(options)
     print("...")
     print("Done")

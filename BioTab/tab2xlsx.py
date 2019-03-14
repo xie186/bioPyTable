@@ -2,7 +2,7 @@
 
 from openpyxl import load_workbook
 from openpyxl import Workbook
-from slugify import slugify
+#from slugify import slugify
 from os.path import basename
 
 class tab2xlsx:
