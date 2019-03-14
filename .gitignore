@@ -1,5 +1,5 @@
 
-# conda env export -p /depot/bioinfo/data/Personal_Directories/xie186/conda/biotab  > environment.yaml
+# conda env export -p /de*/bioi*/data/Pe*/xie186/conda/biotab  > environment.yaml
 
 virtual_biotab/
 *.pyc
