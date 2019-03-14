@@ -1,3 +1,6 @@
+
+# conda env export -p /depot/bioinfo/data/Personal_Directories/xie186/conda/biotab  > environment.yaml
+
 virtual_biotab/
 *.pyc
 test.sh
