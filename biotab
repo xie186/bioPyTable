@@ -6,16 +6,15 @@ from openpyxl import load_workbook
 from openpyxl import Workbook
 from slugify import slugify
 from os.path import basename
+import logging
 
-
-#from BioTab.xlsx2tab import xlsx2tab
-#from BioTab.tab2xlsx import tab2xlsx
-#from BioTab.tabfilter import tabfilter
+import pandas as pd
 
 SUB_XLSX2TAB = "xslx2tab"
 SUB_CSV2TAB = "csv2tab"
 SUB_TAB2XLSX = "tab2xlsx"
 SUB_FILTER = "filter"
+SUB_JOIN = "join"
 
 class tabfilter:
     def __init__ (self):
@@ -112,6 +111,38 @@ class csv2tab:
                  writer.writerows(reader)
         print("Conversion complete.")
 
+class Join:
+    def __init__ (self):
+        pass
+
+    def output_tab(self, options):
+        # https://stackoverflow.com/a/27553098/3357935
+        df_left = 0
+        df_right = 0
+        #self._get_fl_fr(options)
+        if options.format == "tsv":
+            df_left = pd.read_csv(options.left, sep='\t')
+        else:
+            df_left = pd.read_csv(options.left)
+        if options.format == "tsv":
+            df_right = pd.read_csv(options.right, sep='\t')
+        else:
+            df_right = pd.read_csv(options.right)
+        print(options.method)
+        df_join = df_left.join(df_right, how = options.method, lsuffix='', rsuffix='_join') 
+        df_join = df_join.drop([df_join.columns.tolist()[0] + '_join'], axis = 1)  
+        if options.format == "tsv":
+            df_join.to_csv(options.output, sep="\t", index=False)
+        else:
+            df_join.to_csv(options.output, sep=",", index=False)
+    
+    #def _get_fl_fr(self, options): 
+    #    if not options.lf:
+    #        options.lf = options.format
+    #    if not options.rf:
+    #        options.rf = options.format
+
+
 class biotab:
     def __init__(self):
         pass
@@ -128,11 +159,19 @@ class biotab:
     def exe_csv2tab(self, options):
         c2t = csv2tab()
         c2t.output_tab(options)
+    def exe_join(self, options):
+        mer = Join()
+        mer.output_tab(options)
 
 
 if __name__ == '__main__':
     ## description - Text to display before the argument help (default: none)
-    parser=argparse.ArgumentParser(description='biotab: the Swiss army knife of tabular data in bioinformatics') 
+    parent_parser = argparse.ArgumentParser(add_help=False)                                 
+    parent_parser.add_argument('-o', '--output', help='output file', default = "Output_file.tab") 
+
+
+    parser=argparse.ArgumentParser(description='biotab: the Swiss army knife of tabular data in bioinformatics')
+ 
     subparsers = parser.add_subparsers(help='sub-command help', dest = 'command')
     #### create the parser for the subcommand ######
     parser_xlsx2tab = subparsers.add_parser(SUB_XLSX2TAB, help='Convert XLSX file to tab-deletmited file.')
@@ -150,18 +189,27 @@ if __name__ == '__main__':
     parser_tab2xlsx.add_argument('-o', '--output', metavar='output', help='Name for output file. [Default: output.xlsx]', default = "output.xlsx")
 
     ### csv2tab
-    parser_csv2tab = subparsers.add_parser(SUB_CSV2TAB, help='Convert tab-delemited file to XLSX file.')
+    parser_csv2tab = subparsers.add_parser(SUB_CSV2TAB, help='Convert tab-delemited file to XLSX file.', parents = [parent_parser])
     parser_csv2tab.add_argument('-c', '--csv', metavar='csv', help='csv files', required=True)
-    parser_csv2tab.add_argument('-o', '--output', metavar='output', help='Name for output file. [Default: output.tab]', default = "output.tab")
 
     ### Filter
-    parser_filter = subparsers.add_parser(SUB_FILTER, help='Filter a table based on a list of IDs or regions.')
+    parser_filter = subparsers.add_parser(SUB_FILTER, help='Filter a table based on a list of IDs or regions.', parents = [parent_parser])
     parser_filter.add_argument('-t', '--tab', help='Tab-delemited files.', required=True)
     parser_filter.add_argument('-f', '--tabfil', help='Table-delemited file including the column(s) for filtering')
     parser_filter.add_argument('--target_column', type=int, help='Columns to filter', default = 1)
     parser_filter.add_argument('--column', type=int, help='Column(s) with the IDs to filter', default = 1)
     parser_filter.add_argument('--header', type=bool, help='Whether the input table has header', default = False)
-    parser_filter.add_argument('-o', '--output', help='output file', default = "Output_file.tab")
+
+    ## Merge
+    parser_join = subparsers.add_parser(SUB_JOIN, help='Merge two tables ', parents = [parent_parser])
+    parser_join.add_argument('-l', '--left', help='Table 1', required=True)
+    parser_join.add_argument('-r', '--right', help='Table 2', required=True)
+    parser_join.add_argument('--format', help='Input file format', type=str,
+                            choices=['tsv', 'csv'], default = 'tsv')
+    parser_join.add_argument('--method', help='Method', type=str, 
+                            choices=['left', 'right', 'outer', 'inner'], default = 'inner')
+    parser_join.add_argument('--on', help='Column or index level names to join on. These must be found in both DataFrames.')
+   
     options = parser.parse_args()
     dict_cmd = vars(options)
     print("Subcommand is: " + dict_cmd['command'])
@@ -174,5 +222,7 @@ if __name__ == '__main__':
         bt.exe_filter(options)
     if dict_cmd['command'] == SUB_CSV2TAB:
         bt.exe_csv2tab(options)
+    if dict_cmd['command'] == SUB_JOIN:
+        bt.exe_join(options)
     print("...")
     print("Done")
